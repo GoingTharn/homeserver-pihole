@@ -11,7 +11,7 @@ services:
       - "8443:8443/tcp"
     environment:
       TZ: 'America/Chicago' #this is the time zone
-      FTLCONF_LOCAL_IPV4: 172.19.0.2
+      FTLCONF_LOCAL_IPV4: 172.26.0.2
     volumes:
        - './etc-pihole/:/etc/pihole/'
        - './etc-dnsmasq.d/:/etc/dnsmasq.d/'
@@ -21,4 +21,10 @@ services:
     cap_add:
       - NET_ADMIN
     restart: unless-stopped
+    networks:
+      - traefik-proxy
+
+networks:
+  traefik-proxy:
+    external: true
 
