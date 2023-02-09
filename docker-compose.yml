@@ -7,25 +7,28 @@ services:
     ports:
       - "53:53/tcp"
       - "53:53/udp"
-      - "8999:80/tcp"
-      - "8443:443/tcp"
+      - "8999:80"
+      - "8443:443"
     environment:
       TZ: 'America/Chicago' #this is the time zone
       FTLCONF_LOCAL_IPV4: 172.25.0.4
     volumes:
        - './etc-pihole/:/etc/pihole/'
        - './etc-dnsmasq.d/:/etc/dnsmasq.d/'
+       - '/etc/hosts:/etc/hosts'
     dns:
       - 127.0.0.1
-      - 1.1.1.1
+      - 8.8.8.8
     cap_add:
       - NET_ADMIN
     restart: unless-stopped
     networks:
-      - traefik-proxy
+      traefik-proxy:
+        ipv4_address: 172.25.0.4
     labels:
         - traefik.http.routers.pihole.rule=Host(`pihole.azath`)
-        - traefik.http.services.pihole.loadbalancer.server.port=8999
+        - traefik.http.routers.pihole.entrypoints=http
+        - traefik.http.services.pihole.loadbalancer.server.port=80
         - traefik.enable=true
 
 networks:
